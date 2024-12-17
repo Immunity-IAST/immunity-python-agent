@@ -48,7 +48,11 @@ class ControlFlowBuilder:
         :return: Строка с сериализованным потоком управления.
         :rtype: str
         """
-        return json.dumps(self.control_flow, indent=indentation)
+        try:
+            return json.dumps(self.control_flow, indent=indentation)
+        except Exception:
+            print("Этого пидора в Химках видал: " + str(self.control_flow))
+            return json.dumps(self.control_flow, indent=indentation)
 
     def serialize_locals(self, local_dict: dict) -> list:
         """
@@ -173,7 +177,11 @@ class ControlFlowBuilder:
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
                 func_line_number = frame.f_lineno
-                code_line = inspect.getframeinfo(frame).code_context[0].strip()
+                code_line = (
+                    inspect.getframeinfo(frame).code_context[0].strip()
+                    if inspect.getframeinfo(frame).code_context is not None
+                    else "None"
+                )
 
                 module = inspect.getmodule(frame)
                 module_name = module.__name__ if module else "<Unknown>"

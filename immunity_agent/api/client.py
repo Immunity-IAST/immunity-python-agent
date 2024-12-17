@@ -9,8 +9,8 @@ import base64
 
 import requests
 
-from .config import Config  # pylint: disable=import-error
-from .logger import logger_config  # pylint: disable=import-error
+from immunity_agent.config import Config
+from immunity_agent.logger import logger_config
 
 logger = logger_config("Immunity API")
 
