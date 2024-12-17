@@ -104,8 +104,7 @@ class ControlFlowBuilder:
 
         :param frame: Текущий фрейм выполнения.
         :type frame: types.FrameType
-        :param event: Тип события. Возможные значения: 'call', 'line', 'return', 'exception',
-        'c_call', 'c_return', 'c_exception'.
+        :param event: Тип события. Возможные значения: 'call', 'line', 'return', 'exception'.
         :type event: str
         :param arg: Дополнительная информация о событии. Например, для события 'return' это
         значение, которое возвращается из функции.
@@ -215,7 +214,7 @@ class ControlFlowBuilder:
                         "module": module_name,
                         "filename": func_filename,
                         "line": func_line_number,
-                        "final_state": self.serialize_locals(args),  # final state
+                        "final_state": self.serialize_locals(args),
                         "returned_value": (
                             self.serialize_locals(return_value)
                             if return_value

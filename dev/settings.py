@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 import sys
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -29,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-g(!96myxlq)0)u_3f7^m753$s+$*c#3v@l&7%07$+kb&j)(g2*"
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
