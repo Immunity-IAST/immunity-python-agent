@@ -93,7 +93,7 @@ class ControlFlowBuilder:
         }
 
     def trace_calls(
-        frame, event: str, arg
+        self, frame, event: str, arg
     ) -> Callable[[FrameType, str, Any], Optional[Callable]]:
         """
         Функция-трассировщик для отслеживания вызовов.

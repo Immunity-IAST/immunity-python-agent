@@ -139,7 +139,7 @@ def logger_config(logging_name: str) -> AgentLogger:
     :rtype: AgentLogger
     """
 
-    global loggers  # pylint: disable=global-statement
+    global loggers  # pylint: disable=global-variable-not-assigned
 
     if loggers.get(logging_name):
         return loggers.get(logging_name)

@@ -1,8 +1,9 @@
 """
 Модуль для работы с конфигурацией агента интерактивного анализа.
 
-Этот модуль предоставляет класс Config, который позволяет загружать, сохранять и управлять данными конфигурации.
-Конфигурационные данные хранятся в файле JSON.
+Этот модуль предоставляет класс Config, который позволяет загружать,
+сохранять и управлять данными конфигурации. Конфигурационные данные
+хранятся в файле JSON.
 """
 
 import json
@@ -39,7 +40,7 @@ class Config:
         :raises FileNotFoundError: Если файл конфигурации не найден.
         """
         try:
-            with open(self.filename, "r") as f:
+            with open(self.filename, "r", encoding="utf-8") as f:
                 return json.load(f)
         except FileNotFoundError as e:
             logger.error(e)
@@ -49,7 +50,7 @@ class Config:
         """
         Сохраняет текущие данные конфигурации в файл.
         """
-        with open(self.filename, "w") as f:
+        with open(self.filename, "w", encoding="utf-8") as f:
             json.dump(self.data, f)
 
     def get(self, key: str, default: Optional[Any] = None) -> Any:

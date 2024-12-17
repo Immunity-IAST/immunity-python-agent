@@ -8,6 +8,8 @@
 import json
 from typing import Any, Dict, Union
 
+from django.http import HttpResponse
+
 from immunity_agent.logger import logger_config
 
 logger = logger_config("Immunity Django response handler")
