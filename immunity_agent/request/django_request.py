@@ -26,20 +26,20 @@ class DjangoRequest:
 
     @staticmethod
     def serialize_request_item(
-        components_dict: Dict[str, Union[str, Any]]
+        request_components_dict: Dict[str, Union[str, Any]]
     ) -> Dict[str, str]:
         """
         Метод, возвращающий сериализованные компоненты запроса.
 
         Этот метод преобразовывает значения компонентов запроса в строку и возвращает результат.
 
-        :param components_dict: Словарь компонентов запроса.
-        :type components_dict: Dict[str, Union[str, Any]]
+        :param request_components_dict: Словарь компонентов запроса.
+        :type request_components_dict: Dict[str, Union[str, Any]]
         :return: Сериализованная версия компонентов запроса.
         :rtype: Dict[str, str]
         """
         result = {}
-        for key, value in components_dict.items():
+        for key, value in request_components_dict.items():
             result[key] = str(value)
         return result
 

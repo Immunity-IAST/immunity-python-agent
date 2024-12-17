@@ -28,20 +28,20 @@ class DjangoResponse:
 
     @staticmethod
     def serialize_response_item(
-        components_dict: Dict[str, Union[str, Any]]
+        response_components_dict: Dict[str, Union[str, Any]]
     ) -> Dict[str, str]:
         """
         Метод, возвращающий сериализованные компоненты ответа.
 
         Этот метод преобразовывает значения компонентов ответа в строку и возвращает результат.
 
-        :param components_dict: Словарь компонентов ответа.
-        :type components_dict: Dict[str, Union[str, Any]]
+        :param response_components_dict: Словарь компонентов ответа.
+        :type response_components_dict: Dict[str, Union[str, Any]]
         :return: Сериализованная версия компонентов ответа.
         :rtype: Dict[str, str]
         """
         result = {}
-        for key, value in components_dict.items():
+        for key, value in response_components_dict.items():
             result[key] = str(value)
         return result
 

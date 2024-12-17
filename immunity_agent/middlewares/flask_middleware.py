@@ -8,7 +8,7 @@
 import json
 import sys
 from io import BytesIO
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 from urllib.parse import parse_qs
 
 from immunity_agent.api.client import Client
@@ -22,8 +22,9 @@ class ImmunityFlaskMiddleware:
     """
     Промежуточное ПО для инструментирования фреймворка Flask.
 
-    Этот класс реализует промежуточное ПО для фреймворка Flask, которое интегрирует агент Immunity IAST
-    для мониторинга и анализа запросов и ответов.
+    Этот класс реализует промежуточное ПО для фреймворка Flask, которое
+    интегрирует агент Immunity IAST для мониторинга и анализа запросов
+    и ответов.
 
     :param app: Экземпляр приложения Flask.
     :type app: Flask
@@ -68,23 +69,25 @@ class ImmunityFlaskMiddleware:
         response_body = []
 
         def custom_start_response(
-            status: str, headers: List[Tuple[str, str]], exc_info: Any = None
+            response_status: str,
+            response_headers: List[Tuple[str, str]],
+            exc_info: Any = None,
         ) -> None:
             """
             Модификация функции начала ответа для сохранения статуса и заголовков.
 
-            :param status: Статус ответа.
-            :type status: str
-            :param headers: Заголовки ответа.
-            :type headers: List[Tuple[str, str]]
+            :param response_status: Статус ответа.
+            :type response_status: str
+            :param response_headers: Заголовки ответа.
+            :type response_headers: List[Tuple[str, str]]
             :param exc_info: Информация об исключении.
             :type exc_info: Any
             """
             # Сохранение данных о статусе и заголовках
-            self.status = status
-            self.headers = headers
+            self.status = response_status
+            self.headers = response_headers
             # Передача управления оригинальному start_response
-            return start_response(status, headers, exc_info)
+            return start_response(response_status, response_headers, exc_info)
 
         self.control_flow = ControlFlowBuilder(project_root=self.base_path)
         sys.settrace(self.control_flow.trace_calls)
@@ -137,7 +140,7 @@ class ImmunityFlaskMiddleware:
             )
             environ["wsgi.input"] = self._reset_stream(request_body)  # Сохраняем поток
             request_info["body"] = request_body.decode("utf-8")
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             request_info["body"] = None
 
         return request_info
