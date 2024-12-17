@@ -168,7 +168,7 @@ class ControlFlowBuilder:
 
                 return self.trace_calls
 
-            elif event == "line":
+            if event == "line":
                 # Выполнение строки кода внутри функции
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
@@ -193,7 +193,7 @@ class ControlFlowBuilder:
 
                 return self.trace_calls
 
-            elif event == "return":
+            if event == "return":
                 # Возврат из функции
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
@@ -222,7 +222,7 @@ class ControlFlowBuilder:
 
                 return self.trace_calls
 
-            elif event == "exception":
+            if event == "exception":
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
                 func_line_number = frame.f_lineno
@@ -246,6 +246,8 @@ class ControlFlowBuilder:
                         "details": self.serialize_error(return_value),
                     }
                 )
+
+                return self.trace_calls
 
             return self.trace_calls
 

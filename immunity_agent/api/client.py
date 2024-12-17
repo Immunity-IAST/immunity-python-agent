@@ -6,7 +6,6 @@
 """
 
 import base64
-import logging
 
 import requests
 
@@ -16,7 +15,7 @@ from .logger import logger_config
 logger = logger_config("Immunity API")
 
 
-class Client:
+class Client: # pylint: disable=too-few-public-methods
     """
     Класс клиента для взаимодействия с API управляющего сервера.
 
@@ -41,7 +40,7 @@ class Client:
         self.port = self.config.get("port")
         self.project = self.config.get("project")
 
-    def upload_context( # pylint: disable=too-many-argument,too-many-positional-arguments
+    def upload_context( # pylint: disable=too-many-argument
         self, endpoint: str, project: str, request: str, control_flow: str, response: str
     ) -> requests.Response:
         """
