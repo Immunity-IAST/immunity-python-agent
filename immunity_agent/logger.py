@@ -20,8 +20,12 @@
 
 import logging
 
+loggers = {}
 
-class AgentLogger(object):
+LOG_FORMAT = "[%(asctime)s] %(levelname)s [%(name)s] %(message)s"
+
+
+class AgentLogger:
     """
     Класс логгера агента интерактивного анализа.
 
@@ -29,7 +33,7 @@ class AgentLogger(object):
     таких как отладочные сообщения, информационные, предупреждения, ошибки и критические ошибки.
     """
 
-    def __init__(self, log):
+    def __init__(self, log: logging.Logger) -> None:
         """
         Конструктор класса.
 
@@ -38,7 +42,7 @@ class AgentLogger(object):
         """
         self._log = log
 
-    def debug(self, msg, *args, **kwargs):
+    def debug(self, msg: str, *args, **kwargs) -> None:
         """
         Запись отладочного сообщения.
 
@@ -49,7 +53,7 @@ class AgentLogger(object):
         """
         return self._log.debug(msg, *args, **kwargs)
 
-    def info(self, msg, *args, **kwargs):
+    def info(self, msg: str, *args, **kwargs) -> None:
         """
         Запись информационного сообщения.
 
@@ -60,7 +64,7 @@ class AgentLogger(object):
         """
         return self._log.info(msg, *args, **kwargs)
 
-    def warning(self, msg, *args, **kwargs):
+    def warning(self, msg: str, *args, **kwargs) -> None:
         """
         Запись предупреждающего сообщения.
 
@@ -71,7 +75,7 @@ class AgentLogger(object):
         """
         return self._log.warning(msg, *args, **kwargs)
 
-    def warn(self, msg, *args, **kwargs):
+    def warn(self, msg: str, *args, **kwargs) -> None:
         """
         Запись предупреждающего сообщения (синоним метода warning).
 
@@ -82,7 +86,7 @@ class AgentLogger(object):
         """
         return self._log.warn(msg, *args, **kwargs)
 
-    def error(self, msg, *args, **kwargs):
+    def error(self, msg: str, *args, **kwargs) -> None:
         """
         Запись сообщения об ошибке.
 
@@ -93,7 +97,7 @@ class AgentLogger(object):
         """
         return self._log.error(msg, *args, **kwargs)
 
-    def exception(self, msg, *args, exc_info=True, **kwargs):
+    def exception(self, msg: str, *args, exc_info: bool = True, **kwargs) -> None:
         """
         Запись исключения с трассировкой стека.
 
@@ -106,7 +110,7 @@ class AgentLogger(object):
         """
         return self._log.exception(msg, *args, exc_info=exc_info, **kwargs)
 
-    def critical(self, msg, *args, **kwargs):
+    def critical(self, msg: str, *args, **kwargs) -> None:
         """
         Запись критического сообщения.
 
@@ -117,7 +121,7 @@ class AgentLogger(object):
         """
         return self._log.critical(msg, *args, **kwargs)
 
-    def log(self, level, msg, *args, **kwargs):
+    def log(self, level: int, msg: str, *args, **kwargs) -> None:
         """
         Запись сообщения с указанным уровнем важности.
 
@@ -131,19 +135,17 @@ class AgentLogger(object):
         return self._log.log(level, msg, *args, **kwargs)
 
 
-loggers = {}
-
-LOG_FORMAT = "[%(asctime)s] %(levelname)s [%(name)s] %(message)s"
-
-
-def logger_config(logging_name):
+def logger_config(logging_name: str) -> AgentLogger:
     """
-    Получение логгера по названию
-    :param logging_name: Название логгера
-    :return: Объект логгера
+    Получение логгера по названию.
+
+    :param logging_name: Название логгера.
+    :type logging_name: str
+    :return: Объект логгера.
+    :rtype: AgentLogger
     """
 
-    global loggers
+    global loggers  # pylint: disable=global-statement
 
     if loggers.get(logging_name):
         return loggers.get(logging_name)

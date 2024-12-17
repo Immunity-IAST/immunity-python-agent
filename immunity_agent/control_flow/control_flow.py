@@ -44,7 +44,7 @@ class ControlFlowBuilder:
             for var_name, var_value in local_dict.items():
                 try:
                     value_str = str(var_value)
-                except Exception: # pylint: disable=broad-except
+                except Exception:  # pylint: disable=broad-except
                     value_str = "<non-serializable>"
 
                 serialized.append(
@@ -54,7 +54,7 @@ class ControlFlowBuilder:
                         "value": value_str if value_str else "<Non-serializable>",
                     }
                 )
-        except Exception: # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             serialized.append(str(local_dict))
         return serialized
 
