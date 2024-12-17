@@ -1,6 +1,6 @@
 import json
-from immunity_agent.logger import logger_config
 
+from immunity_agent.logger import logger_config
 
 logger = logger_config("Immunity Django response handler")
 
@@ -26,15 +26,18 @@ class DjangoResponse:
         """
         Метод, возвращающий сериализованный ответ.
         """
-        return json.dumps({
-            'status': response.status_code,
-            'headers': DjangoResponse.serialize_response_item(response.headers),
-            'body': str(response.content),
-            'content_type': response.get('content-type'),
-            'content_length': response.get('content-length'),
-            'charset': response.get('charset'),
-            'version': response.get('version'),
-            'reason_phrase': response.reason_phrase,
-            'cookies': DjangoResponse.serialize_response_item(response.cookies),
-            'streaming': response.streaming,
-        }, indent=indentation)
+        return json.dumps(
+            {
+                "status": response.status_code,
+                "headers": DjangoResponse.serialize_response_item(response.headers),
+                "body": str(response.content),
+                "content_type": response.get("content-type"),
+                "content_length": response.get("content-length"),
+                "charset": response.get("charset"),
+                "version": response.get("version"),
+                "reason_phrase": response.reason_phrase,
+                "cookies": DjangoResponse.serialize_response_item(response.cookies),
+                "streaming": response.streaming,
+            },
+            indent=indentation,
+        )

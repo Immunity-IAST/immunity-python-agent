@@ -2,7 +2,7 @@ import logging
 
 loggers = {}
 
-LOG_FORMAT = '[%(asctime)s] %(levelname)s [%(name)s] %(message)s'
+LOG_FORMAT = "[%(asctime)s] %(levelname)s [%(name)s] %(message)s"
 
 
 class AgentLogger(object):

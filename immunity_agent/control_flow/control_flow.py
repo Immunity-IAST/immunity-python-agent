@@ -1,8 +1,8 @@
+import inspect
 import json
 import time
-import inspect
-from immunity_agent.logger import logger_config
 
+from immunity_agent.logger import logger_config
 
 logger = logger_config("Immunity control flow handler")
 
@@ -11,6 +11,7 @@ class ControlFlowBuilder:
     """
     Класс, описывающий логику захвата потока управления.
     """
+
     def __init__(self, project_root):
         """
         Конструктор класса.
@@ -42,11 +43,13 @@ class ControlFlowBuilder:
                 except Exception:
                     value_str = "<non-serializable>"
 
-                serialized.append({
-                    "name": var_name,
-                    "type": type(var_value).__name__,
-                    "value": value_str if value_str else "<Non-serializable>"
-                })
+                serialized.append(
+                    {
+                        "name": var_name,
+                        "type": type(var_value).__name__,
+                        "value": value_str if value_str else "<Non-serializable>",
+                    }
+                )
         except Exception:
             serialized.append(str(local_dict))
         return serialized
@@ -63,7 +66,7 @@ class ControlFlowBuilder:
             "message": str(error_tuple[1]),
         }
 
-    def trace_calls(self, frame, event, arg): # todo: refactor
+    def trace_calls(self, frame, event, arg):  # todo: refactor
         """
         Переопределяем метод трассировки вызовов.
         :param frame: Фрейм (содержит необходимую информацию о текущем вызове)
@@ -73,7 +76,7 @@ class ControlFlowBuilder:
         """
         filename = frame.f_code.co_filename
 
-        if event == 'call':
+        if event == "call":
             func_name = frame.f_code.co_name
             func_filename = frame.f_code.co_filename
             func_line_number = frame.f_lineno
@@ -87,19 +90,21 @@ class ControlFlowBuilder:
                     module = inspect.getmodule(frame)
                     module_name = module.__name__ if module else "<Unknown>"
                     args = frame.f_locals.copy()
-                    self.control_flow.append({
-                        "timestamp": time.strftime('%Y-%m-%d %H:%M:%S'),
-                        "event": "external_call",
-                        "name": func_name,
-                        "module": module_name,
-                        "filename": func_filename,
-                        "line": func_line_number,
-                        "args": self.serialize_locals(args),
-                    })
+                    self.control_flow.append(
+                        {
+                            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                            "event": "external_call",
+                            "name": func_name,
+                            "module": module_name,
+                            "filename": func_filename,
+                            "line": func_line_number,
+                            "args": self.serialize_locals(args),
+                        }
+                    )
                     self.external_call_detected = True
 
         if self.project_root in filename:
-            if event == 'call':
+            if event == "call":
                 # Вызов функции
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
@@ -108,19 +113,21 @@ class ControlFlowBuilder:
                 module = inspect.getmodule(frame)
                 module_name = module.__name__ if module else "<Unknown>"
                 args = frame.f_locals.copy()
-                self.control_flow.append({
-                    "timestamp": time.strftime('%Y-%m-%d %H:%M:%S'),
-                    "event": "internal_call",
-                    "name": func_name,
-                    "module": module_name,
-                    "filename": func_filename,
-                    "line": func_line_number,
-                    "args": self.serialize_locals(args),
-                })
+                self.control_flow.append(
+                    {
+                        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                        "event": "internal_call",
+                        "name": func_name,
+                        "module": module_name,
+                        "filename": func_filename,
+                        "line": func_line_number,
+                        "args": self.serialize_locals(args),
+                    }
+                )
 
                 return self.trace_calls
 
-            elif event == 'line':
+            elif event == "line":
                 # Выполнение строки кода внутри функции
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
@@ -130,20 +137,22 @@ class ControlFlowBuilder:
                 module = inspect.getmodule(frame)
                 module_name = module.__name__ if module else "<Unknown>"
                 args = frame.f_locals.copy()
-                self.control_flow.append({
-                    "timestamp": time.strftime('%Y-%m-%d %H:%M:%S'),
-                    "event": "code_line",
-                    "name": func_name,
-                    "module": module_name,
-                    "filename": func_filename,
-                    "line": func_line_number,
-                    "args": self.serialize_locals(args),
-                    "code": code_line,
-                })
+                self.control_flow.append(
+                    {
+                        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                        "event": "code_line",
+                        "name": func_name,
+                        "module": module_name,
+                        "filename": func_filename,
+                        "line": func_line_number,
+                        "args": self.serialize_locals(args),
+                        "code": code_line,
+                    }
+                )
 
                 return self.trace_calls
 
-            elif event == 'return':
+            elif event == "return":
                 # Возврат из функции
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
@@ -153,20 +162,26 @@ class ControlFlowBuilder:
                 module = inspect.getmodule(frame)
                 module_name = module.__name__ if module else "<Unknown>"
                 args = frame.f_locals.copy()
-                self.control_flow.append({
-                    "timestamp": time.strftime('%Y-%m-%d %H:%M:%S'),
-                    "event": "return",
-                    "name": func_name,
-                    "module": module_name,
-                    "filename": func_filename,
-                    "line": func_line_number,
-                    "final_state": self.serialize_locals(args), # final state
-                    "returned_value": self.serialize_locals(return_value) if return_value else "None",
-                })
+                self.control_flow.append(
+                    {
+                        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                        "event": "return",
+                        "name": func_name,
+                        "module": module_name,
+                        "filename": func_filename,
+                        "line": func_line_number,
+                        "final_state": self.serialize_locals(args),  # final state
+                        "returned_value": (
+                            self.serialize_locals(return_value)
+                            if return_value
+                            else "None"
+                        ),
+                    }
+                )
 
                 return self.trace_calls
 
-            elif event == 'exception':
+            elif event == "exception":
                 func_name = frame.f_code.co_name
                 func_filename = frame.f_code.co_filename
                 func_line_number = frame.f_lineno
@@ -175,17 +190,21 @@ class ControlFlowBuilder:
                 module = inspect.getmodule(frame)
                 module_name = module.__name__ if module else "<Unknown>"
                 args = frame.f_locals.copy()
-                self.control_flow.append({
-                    "timestamp": time.strftime('%Y-%m-%d %H:%M:%S'),
-                    "event": "error",
-                    "source": [{
-                        "function": func_name,
-                        "module": module_name,
-                        "filename": func_filename,
-                        "line": func_line_number,
-                    }],
-                    "details": self.serialize_error(return_value),
-                })
+                self.control_flow.append(
+                    {
+                        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                        "event": "error",
+                        "source": [
+                            {
+                                "function": func_name,
+                                "module": module_name,
+                                "filename": func_filename,
+                                "line": func_line_number,
+                            }
+                        ],
+                        "details": self.serialize_error(return_value),
+                    }
+                )
 
             return self.trace_calls
 

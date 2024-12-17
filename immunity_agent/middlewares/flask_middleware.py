@@ -1,15 +1,18 @@
-import sys
 import json
+import sys
+
 from immunity_agent.api.client import Client
 from immunity_agent.control_flow import ControlFlowBuilder
 from immunity_agent.logger import logger_config
 
 logger = logger_config("Immunity Flask middleware")
 
+
 class ImmunityFlaskMiddleware:
     """
     Промежуточное ПО для инструментирования фреймворка Flask.
     """
+
     def __init__(self, app, base_path):
         """
         Конструктор.
@@ -18,13 +21,13 @@ class ImmunityFlaskMiddleware:
         self.base_path = base_path
         self.api_client = Client()
         self.project = self.api_client.project
-        logger.info('Агент Immunity IAST активирован.')
+        logger.info("Агент Immunity IAST активирован.")
 
     def __call__(self, environ, start_response):
         # Перехват входящего запроса
         request_info = self._capture_request(environ)
-        #print("==== Incoming Request ====")
-        #print(request_info)
+        # print("==== Incoming Request ====")
+        # print(request_info)
 
         # Буфер для записи ответа
         response_body = []
@@ -49,21 +52,21 @@ class ImmunityFlaskMiddleware:
                 yield data
         finally:
             # Закрываем итератор, если он поддерживает метод close()
-            if hasattr(app_iter, 'close'):
+            if hasattr(app_iter, "close"):
                 app_iter.close()
 
         # Анализируем полный ответ (после сборки всего тела)
         response_data = b"".join(response_body)
         response_info = self._capture_response(self.status, self.headers, response_data)
-        #print("==== Outgoing Response ====")
-        #print(response_info)
+        # print("==== Outgoing Response ====")
+        # print(response_info)
 
         self.api_client.upload_context(
             request_info["path"],
             self.project,
             json.dumps(request_info),
             self.control_flow.serialize(),
-            json.dumps(response_info)
+            json.dumps(response_info),
         )
 
     def _capture_request(self, environ):
@@ -71,6 +74,7 @@ class ImmunityFlaskMiddleware:
         Сбор информации о запросе из WSGI environ.
         """
         from urllib.parse import parse_qs
+
         request_info = {
             "method": environ.get("REQUEST_METHOD"),
             "path": environ.get("PATH_INFO"),
@@ -80,7 +84,9 @@ class ImmunityFlaskMiddleware:
 
         # Чтение тела запроса
         try:
-            request_body = environ["wsgi.input"].read(int(environ.get("CONTENT_LENGTH", 0) or 0))
+            request_body = environ["wsgi.input"].read(
+                int(environ.get("CONTENT_LENGTH", 0) or 0)
+            )
             environ["wsgi.input"] = self._reset_stream(request_body)  # Сохраняем поток
             request_info["body"] = request_body.decode("utf-8")
         except Exception:
@@ -102,11 +108,14 @@ class ImmunityFlaskMiddleware:
         """
         Извлечение заголовков из WSGI environ.
         """
-        return {key[5:]: value for key, value in environ.items() if key.startswith("HTTP_")}
+        return {
+            key[5:]: value for key, value in environ.items() if key.startswith("HTTP_")
+        }
 
     def _reset_stream(self, body):
         """
         Восстанавливает wsgi.input поток после чтения.
         """
         from io import BytesIO
+
         return BytesIO(body)
