@@ -1,4 +1,12 @@
+"""
+Промежуточное ПО для интеграции агента Immunity IAST с фреймворком Django.
+
+Этот модуль предоставляет промежуточное программное обеспечение (middleware) для фреймворка Django,
+которое позволяет интегрировать агент Immunity IAST для мониторинга и анализа запросов и ответов.
+"""
+
 import sys
+from typing import Any
 
 from django.conf import settings
 
@@ -14,22 +22,38 @@ logger = logger_config("Immunity Django middleware")
 class ImmunityDjangoMiddleware:
     """
     Промежуточное ПО для инструментирования фреймворка Django.
+
+    Этот класс реализует промежуточное ПО для фреймворка Django, которое интегрирует агент Immunity IAST
+    для мониторинга и анализа запросов и ответов.
+
+    :param get_response: Функция, возвращающая ответ на запрос.
+    :type get_response: Callable[[HttpRequest], HttpResponse]
     """
 
-    def __init__(self, get_response):
+    def __init__(self, get_response: callable):
         """
-        Конструктор.
+        Конструктор класса.
+
+        Устанавливает функцию получения ответа и создает экземпляр клиента API.
+
+        :param get_response: Функция, возвращающая ответ на запрос.
+        :type get_response: Callable[[HttpRequest], HttpResponse]
         """
         self.get_response = get_response
         self.api_client = Client()
         self.project = self.api_client.project
         logger.info("Агент Immunity IAST активирован.")
 
-    def __call__(self, request):
+    def __call__(self, request: Any) -> Any:
         """
         Переопределяем метод вызова.
+
+        Этот метод перехватывает запросы и ответы, собирает информацию о них и передает её в API.
+
         :param request: Объект запроса.
+        :type request: HttpRequest
         :return: Ответ.
+        :rtype: HttpResponse
         """
         logger.info(f"Отслеживаю запрос {request.path}")
         self.control_flow = ControlFlowBuilder(project_root=str(settings.BASE_DIR))
@@ -38,10 +62,6 @@ class ImmunityDjangoMiddleware:
         response = self.get_response(request)
 
         sys.settrace(None)
-
-        """print(DjangoRequest.serialize(request)) # DEBUG PRINT
-        print(self.control_flow.serialize()) # DEBUG PRINT
-        print(DjangoResponse.serialize(response)) # DEBUG PRINT"""
 
         self.api_client.upload_context(
             request.path,

@@ -1,4 +1,12 @@
+"""
+Класс для сериализации ответов в фреймворке Django.
+
+Этот модуль предоставляет функциональность для сериализации ответов в фреймворке Django,
+что позволяет передавать данные в API для дальнейшего анализа.
+"""
+
 import json
+from typing import Any, Dict, Union
 
 from immunity_agent.logger import logger_config
 
@@ -7,14 +15,28 @@ logger = logger_config("Immunity Django response handler")
 
 class DjangoResponse:
     """
-    Класс, описывающий логику сериализации Django-ответа.
+    Класс, описывающий логику сериализации Django-ответов.
+
+    Этот класс предоставляет методы для преобразования объектов ответов Django в JSON-формат,
+    что позволяет отправлять данные в API для последующего анализа.
+
+    :param response: Объект ответа Django.
+    :type response: HttpResponse
     """
 
     @staticmethod
-    def serialize_response_item(components_dict):
+    def serialize_response_item(
+        components_dict: Dict[str, Union[str, Any]]
+    ) -> Dict[str, str]:
         """
-        Метод, возвращающий сериализованное поле запроса
-        (заголовки, метаданные и т.д., то что с ходу не лезет в json).
+        Метод, возвращающий сериализованные компоненты ответа.
+
+        Этот метод преобразовывает значения компонентов ответа в строку и возвращает результат.
+
+        :param components_dict: Словарь компонентов ответа.
+        :type components_dict: Dict[str, Union[str, Any]]
+        :return: Сериализованная версия компонентов ответа.
+        :rtype: Dict[str, str]
         """
         result = {}
         for key, value in components_dict.items():
@@ -22,9 +44,18 @@ class DjangoResponse:
         return result
 
     @staticmethod
-    def serialize(response, indentation=None):
+    def serialize(response: HttpResponse, indentation: int = None) -> str:
         """
-        Метод, возвращающий сериализованный ответ.
+        Метод, возвращающий сериализованную версию ответа.
+
+        Этот метод объединяет все компоненты ответа в единый JSON-объект и возвращает его.
+
+        :param response: Объект ответа Django.
+        :type response: HttpResponse
+        :param indentation: Уровень отступа для форматированного вывода.
+        :type indentation: int
+        :return: Сериализованный ответ в формате JSON.
+        :rtype: str
         """
         return json.dumps(
             {
