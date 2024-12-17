@@ -18,7 +18,7 @@ from immunity_agent.logger import logger_config
 logger = logger_config("Immunity Flask middleware")
 
 
-class ImmunityFlaskMiddleware: # pylint: disable=too-few-public-methods
+class ImmunityFlaskMiddleware:  # pylint: disable=too-few-public-methods
     """
     Промежуточное ПО для инструментирования фреймворка Flask.
 

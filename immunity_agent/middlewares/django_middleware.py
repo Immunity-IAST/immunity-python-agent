@@ -19,7 +19,7 @@ from immunity_agent.response.django_response import DjangoResponse
 logger = logger_config("Immunity Django middleware")
 
 
-class ImmunityDjangoMiddleware: # pylint: disable=too-few-public-methods
+class ImmunityDjangoMiddleware:  # pylint: disable=too-few-public-methods
     """
     Промежуточное ПО для инструментирования фреймворка Django.
 

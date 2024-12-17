@@ -9,13 +9,13 @@ import base64
 
 import requests
 
-from .config import Config # pylint: disable=import-error
-from .logger import logger_config # pylint: disable=import-error
+from .config import Config  # pylint: disable=import-error
+from .logger import logger_config  # pylint: disable=import-error
 
 logger = logger_config("Immunity API")
 
 
-class Client: # pylint: disable=too-few-public-methods
+class Client:  # pylint: disable=too-few-public-methods
     """
     Класс клиента для взаимодействия с API управляющего сервера.
 
@@ -40,9 +40,13 @@ class Client: # pylint: disable=too-few-public-methods
         self.port = self.config.get("port")
         self.project = self.config.get("project")
 
-    # pylint: disable=too-many-arguments, too-many-positional-arguments
-    def upload_context(
-        self, endpoint: str, project: str, request: str, control_flow: str, response: str
+    def upload_context(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+        self,
+        endpoint: str,
+        project: str,
+        request: str,
+        control_flow: str,
+        response: str,
     ) -> requests.Response:
         """
         Отправка контекста в API.
@@ -95,5 +99,7 @@ class Client: # pylint: disable=too-few-public-methods
                 )
             return response
         except requests.exceptions.RequestException as e:
-            logger.exception(f"Произошла ошибка при отправке данных о запросе {endpoint}")
+            logger.exception(
+                f"Произошла ошибка при отправке данных о запросе {endpoint}"
+            )
             raise e
