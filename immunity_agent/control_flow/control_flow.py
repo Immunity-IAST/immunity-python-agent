@@ -48,11 +48,7 @@ class ControlFlowBuilder:
         :return: Строка с сериализованным потоком управления.
         :rtype: str
         """
-        try:
-            return json.dumps(self.control_flow, indent=indentation)
-        except Exception:
-            print("Этого пидора в Химках видал: " + str(self.control_flow))
-            return json.dumps(self.control_flow, indent=indentation)
+        return json.dumps(self.control_flow, indent=indentation)
 
     def serialize_locals(self, local_dict: dict) -> list:
         """
