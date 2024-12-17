@@ -41,16 +41,17 @@ class Client:
         self.port = self.config.get("port")
         self.project = self.config.get("project")
 
-    def upload_context(
-        self, id: str, project: str, request: str, control_flow: str, response: str
+    def upload_context( # pylint: disable=too-many-argument,too-many-positional-arguments
+        self, endpoint: str, project: str, request: str, control_flow: str, response: str
     ) -> requests.Response:
         """
         Отправка контекста в API.
 
-        Метод кодирует данные запроса, контрольного потока и ответа в Base64 и отправляет их на сервер.
+        Метод кодирует данные запроса, контрольного потока и ответа в Base64 и
+        отправляет их на сервер.
 
-        :param id: Идентификатор запроса.
-        :type id: str
+        :param endpoint: Адрес перехваченного запроса.
+        :type endpoint: str
         :param project: Проект, к которому относится запрос.
         :type project: str
         :param request: Запрос в формате HTTP.
@@ -82,16 +83,17 @@ class Client:
                         "utf-8"
                     ),
                 },
+                timeout=15,
             )
             if response.status_code == 200:
-                logger.info(f"Данные о запросе {id} отправлены на обработку.")
+                logger.info(f"Данные о запросе {endpoint} отправлены на обработку.")
             else:
                 logger.error(
-                    f"Сбой отправки данных о запросе {id}. "
+                    f"Сбой отправки данных о запросе {endpoint}. "
                     f"Код ответа: {response.status_code}; "
                     f"Содержимое ответа: {response.text}"
                 )
             return response
         except requests.exceptions.RequestException as e:
-            logger.exception(f"Произошла ошибка при отправке данных о запросе {id}")
+            logger.exception(f"Произошла ошибка при отправке данных о запросе {endpoint}")
             raise e

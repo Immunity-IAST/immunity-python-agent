@@ -18,7 +18,7 @@ from immunity_agent.logger import logger_config
 logger = logger_config("Immunity Flask middleware")
 
 
-class ImmunityFlaskMiddleware:
+class ImmunityFlaskMiddleware: # pylint: disable=too-few-public-methods
     """
     Промежуточное ПО для инструментирования фреймворка Flask.
 
@@ -47,6 +47,9 @@ class ImmunityFlaskMiddleware:
         self.base_path = base_path
         self.api_client = Client()
         self.project = self.api_client.project
+        self.status = None
+        self.headers = None
+        self.control_flow = None
         logger.info("Агент Immunity IAST активирован.")
 
     def __call__(self, environ: Dict[str, str], start_response: callable) -> bytes:

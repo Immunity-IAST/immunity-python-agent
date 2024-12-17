@@ -141,6 +141,8 @@ class ControlFlowBuilder:
                         }
                     )
                     self.external_call_detected = True
+                else:
+                    self.external_call_detected = False
 
         if self.project_root in filename:
             if event == "call":

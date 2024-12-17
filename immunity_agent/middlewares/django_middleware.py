@@ -19,12 +19,13 @@ from immunity_agent.response.django_response import DjangoResponse
 logger = logger_config("Immunity Django middleware")
 
 
-class ImmunityDjangoMiddleware:
+class ImmunityDjangoMiddleware: # pylint: disable=too-few-public-methods
     """
     Промежуточное ПО для инструментирования фреймворка Django.
 
-    Этот класс реализует промежуточное ПО для фреймворка Django, которое интегрирует агент Immunity IAST
-    для мониторинга и анализа запросов и ответов.
+    Этот класс реализует промежуточное ПО для фреймворка Django,
+    которое интегрирует агент Immunity IAST для мониторинга и анализа
+    запросов и ответов.
 
     :param get_response: Функция, возвращающая ответ на запрос.
     :type get_response: Callable[[HttpRequest], HttpResponse]
@@ -42,6 +43,7 @@ class ImmunityDjangoMiddleware:
         self.get_response = get_response
         self.api_client = Client()
         self.project = self.api_client.project
+        self.control_flow = None
         logger.info("Агент Immunity IAST активирован.")
 
     def __call__(self, request: Any) -> Any:
