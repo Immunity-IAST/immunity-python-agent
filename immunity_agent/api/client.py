@@ -40,7 +40,8 @@ class Client: # pylint: disable=too-few-public-methods
         self.port = self.config.get("port")
         self.project = self.config.get("project")
 
-    def upload_context( # noqa: L0122
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
+    def upload_context(
         self, endpoint: str, project: str, request: str, control_flow: str, response: str
     ) -> requests.Response:
         """
