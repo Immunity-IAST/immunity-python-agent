@@ -92,7 +92,7 @@ class ControlFlowBuilder:
             "message": str(error_tuple[1]),
         }
 
-    def trace_calls(
+    def trace_calls(  # pylint: disable=too-many-statements
         self, frame, event: str, arg
     ) -> Callable[[FrameType, str, Any], Optional[Callable]]:
         """
