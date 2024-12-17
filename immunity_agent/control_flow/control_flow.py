@@ -1,3 +1,7 @@
+"""
+Модуль для перехвата и обработки потока управления.
+"""
+
 import inspect
 import json
 import time
@@ -19,7 +23,7 @@ class ControlFlowBuilder:
         """
         self.project_root = project_root
         self.external_call_detected = False
-        self.control_flow = list()
+        self.control_flow = []
 
     def serialize(self, indentation=None):
         """
@@ -40,7 +44,7 @@ class ControlFlowBuilder:
             for var_name, var_value in local_dict.items():
                 try:
                     value_str = str(var_value)
-                except Exception:
+                except Exception: # pylint: disable=broad-except
                     value_str = "<non-serializable>"
 
                 serialized.append(
@@ -50,7 +54,7 @@ class ControlFlowBuilder:
                         "value": value_str if value_str else "<Non-serializable>",
                     }
                 )
-        except Exception:
+        except Exception: # pylint: disable=broad-except
             serialized.append(str(local_dict))
         return serialized
 
@@ -66,7 +70,7 @@ class ControlFlowBuilder:
             "message": str(error_tuple[1]),
         }
 
-    def trace_calls(self, frame, event, arg):  # todo: refactor
+    def trace_calls(self, frame, event, arg):
         """
         Переопределяем метод трассировки вызовов.
         :param frame: Фрейм (содержит необходимую информацию о текущем вызове)
