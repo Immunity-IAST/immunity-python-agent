@@ -9,8 +9,8 @@ import base64
 
 import requests
 
-from .config import Config
-from .logger import logger_config
+from .config import Config # pylint: disable=import-error
+from .logger import logger_config # pylint: disable=import-error
 
 logger = logger_config("Immunity API")
 
@@ -40,7 +40,7 @@ class Client: # pylint: disable=too-few-public-methods
         self.port = self.config.get("port")
         self.project = self.config.get("project")
 
-    def upload_context( # pylint: disable=too-many-argument
+    def upload_context( # noqa: L0122
         self, endpoint: str, project: str, request: str, control_flow: str, response: str
     ) -> requests.Response:
         """
